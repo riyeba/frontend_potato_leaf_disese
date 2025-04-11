@@ -242,7 +242,7 @@ function Register() {
   const [data, setData] = useState(null);
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [showResult, setShowResult] = useState(false); // ✅ track result visibility
+  const [showResult, setShowResult] = useState(false); // 
 
   const fileInputRef = useRef(null);
 
@@ -264,13 +264,17 @@ function Register() {
 
   async function Submit() {
     if (!validateForm()) return;
+    if (!imagePreview) return
 
     setLoading(true);
     const formdata = new FormData();
     if (file) formdata.append("file", file);
 
     try {
-      const PostPrediction = "https://potatoes-leaf-disease-detection.onrender.com/predict";
+      const PostPrediction= "https://potatoes-leaf-disease-detection.onrender.com/predict";
+      
+      
+      // const PostPrediction= "http://localhost:8000/predict" 
       const response = await axios.post(PostPrediction, formdata);
       if (response.status === 200) {
         setData(response.data);
@@ -299,7 +303,8 @@ function Register() {
   };
 
   // ✅ Clear everything
-  const handleClear = () => {
+  const handleClear = (e) => {
+    e.preventDefault();
     setFile(null);
     setImagePreview(null);
     setData(null);
@@ -347,10 +352,10 @@ function Register() {
               {!showResult ? (
                 <button
                   type="submit"
-                  className="w-full py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-300"
+                  className="w-full py-2 bg-blue-500 text-white font-semibold cursor-pointer rounded-lg hover:bg-blue-600 transition duration-300"
                   disabled={loading}
                 >
-                  {loading ? "Loading..." : "Submit"}
+                  {loading ? "Loading..." :   "Submit"}
                 </button>
               ) : (
                 <button
@@ -371,7 +376,7 @@ function Register() {
                 <strong>Predicted Class:</strong> <strong>{data.class}</strong>
               </p>
               <p className="text-gray-600">
-                <strong>Confidence Level:</strong> <strong>{(data.Confidence * 100).toFixed(1)}%</strong>
+                <strong>Confidence Level:</strong> <strong>{(data.confidence * 100).toFixed(1)}%</strong>
               </p>
             </div>
           )}
